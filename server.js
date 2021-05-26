@@ -33,15 +33,36 @@ app.get('/', async (req,res,next)=> {
 });
 
 
-// app.get ('/composer/:id', async (req, res, next) => {
-//     try {
-//         const composer = req.params.id
-//         res.send(await Composer.findFilms()); 
-//     }
-//     catch (err) {
-//         next(err);
-//     }
-// });
+app.get ('/composer/:id', async (req, res, next) => {
+    try {
+        const composer = await Composer.findByPk(req.params.id);
+        const films = await composer.findFilms();
+        console.log(films);
+
+        const html = `
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>${composer.name}</title>
+                <!-- <link rel="stylesheet" href="/style.css" /> -->
+            </head>
+            <body>
+                <h3><a href ='/'>${composer.name}</a></h3>
+                <ul>
+                    ${
+                        films.map((film) => `<li>${film.title}, directed by ${film.director.name}</li>`).join('')
+                    }
+                </ul>
+            </body>
+        </html>
+        `
+
+        res.send(html); 
+    }
+    catch (err) {
+        next(err);
+    }
+});
 
 const setUp = async() => {
     try {

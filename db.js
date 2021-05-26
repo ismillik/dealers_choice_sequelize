@@ -43,7 +43,7 @@ const films = [
     'The Shape of Water', 
     'The Grand Budapest Hotel', 
     'Isle of Dogs',
-    'Schindler \'s List', 
+    'Schindler\'s List', 
     'Star Wars', 
     'Jaws'
 ];
@@ -103,7 +103,10 @@ Composer.prototype.findFilms = function(){
     return Film.findAll({
       where: {
         composerId: this.id
-      }
+      },
+      include: { 
+          model: Director, as: 'director'
+        }
     });
   }
 
